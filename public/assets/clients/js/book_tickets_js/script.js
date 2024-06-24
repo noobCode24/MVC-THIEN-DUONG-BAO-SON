@@ -510,7 +510,7 @@ if (btnSuccessCheckout) {
     user.country = select('#country').value
     user.address = select('#address').value
     saveUserToSession()
-    window.location.href = 'end.html'
+    window.location.href = 'End'
   })
 }
 
