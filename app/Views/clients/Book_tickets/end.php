@@ -94,13 +94,6 @@
                                     <td>1,170,000 VND</td>
                                 </tr>
                                 <tr>
-                                    <td>VÉ THAM QUAN KHÁCH CAO TỪ 1M – 1,3M</td>
-                                    <td>28-06-2024</td>
-                                    <td>2</td>
-                                    <td>320,000 VND</td>
-                                    <td>640,000 VND</td>
-                                </tr>
-                                <tr>
                                     <td colspan="4" class="discount">GIẢM GIÁ</td>
                                     <td>0 VND</td>
                                 </tr>
@@ -112,11 +105,11 @@
                         </table>
                         <div class="text-footer-complete">
                             <div>Ngày thanh toán: <span class="payment-date">24/06/2024</span></div>
-                            <div class="contact-info-complete">Họ tên: <span>Hoang Van Vu</span></div>
-                            <div class="contact-info-complete">Số điện thoại: <span>0565097603</span></div>
-                            <div class="contact-info-complete">Địa chỉ: <span></span></div>
+                            <div class="contact-info-complete">Họ tên: <span id="customer-fullname">Hoang Van Vu</span></div>
+                            <div class="contact-info-complete">Số điện thoại: <span id="customer-phone">0565097603</span></div>
+                            <div class="contact-info-complete">Địa chỉ: <span id="customer-address"></span></div>
                             <div class="contact-info-complete">Mọi thông tin về vé chúng tôi sẽ gửi về hòm thư:
-                                <span>vusun2k2004@gmail.com</span>
+                                <span id="customer-email">vusun2k2004@gmail.com</span>
                             </div>
                         </div>
                     </div>
