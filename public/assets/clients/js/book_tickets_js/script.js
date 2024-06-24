@@ -116,6 +116,14 @@ let booking = {
   tickets: [],
   totalPrice: 0,
 }
+let user = {
+  fullName: '',
+  phone: '',
+  email: '',
+  country: '',
+  address: '',
+  idNumber: '',
+}
 
 function saveBookingToSession() {
   let bookingJSON = JSON.stringify(booking)
@@ -138,6 +146,23 @@ function getBookingFromSession() {
 }
 
 getBookingFromSession()
+
+function saveUserToSession() {
+  let userJSON = JSON.stringify(user)
+  // Lưu vào sessionStorage với key là 'user'
+  sessionStorage.setItem('user', userJSON)
+  console.log('save', user)
+}
+
+function getUserFromSession() {
+  // Lấy dữ liệu từ sessionStorage với key là 'user'
+  let userJSON = sessionStorage.getItem('user')
+  // Nếu có dữ liệu, chuyển đổi từ JSON thành object và gán lại cho user
+  if (userJSON) {
+    user = JSON.parse(userJSON)
+    console.log('get', user)
+  }
+}
 
 $('#datepicker').on('change', function () {
   var selectedDate = $('#datepicker').datepicker('getDate')
@@ -479,7 +504,66 @@ updateTicketDateComplete()
 const btnSuccessCheckout = select('#confirm-btn-checkout')
 if (btnSuccessCheckout) {
   btnSuccessCheckout.addEventListener('click', function () {
-    saveBookingToSession()
-    window.location.href = 'End'
+    user.fullName = select('#fullName').value
+    user.phone = select('#phone').value
+    user.email = select('#email').value
+    user.country = select('#country').value
+    user.address = select('#address').value
+    saveUserToSession()
+    window.location.href = 'end.html'
   })
+}
+
+getUserFromSession()
+
+const tableBody = select('.table tbody')
+const paymentDateElement = document.querySelector('.payment-date')
+const fullNameElement = document.getElementById('customer-fullname')
+const phoneNumberElement = document.getElementById('customer-phone')
+const addressElement = document.getElementById('customer-address')
+const emailElement = document.getElementById('customer-email')
+
+if (
+  tableBody &&
+  paymentDateElement &&
+  fullNameElement &&
+  phoneNumberElement &&
+  addressElement &&
+  emailElement
+) {
+  tableBody.innerHTML = ''
+  booking.tickets.forEach((ticket) => {
+    const ticketRow = `
+        <tr>
+          <td>${ticket.title}</td>
+          <td>${booking.day}/${booking.month}/${booking.year}</td>
+          <td>${ticket.quantity}</td>
+          <td>${ticket.price.toLocaleString('vi-VN')} VND</td>
+          <td>${(ticket.price * ticket.quantity).toLocaleString(
+            'vi-VN',
+          )} VND</td>
+        </tr>
+      `
+    tableBody.innerHTML += ticketRow
+  })
+
+  const rowTotalAndDiscount = `
+    <tr>
+      <td colspan="4" class="discount">GIẢM GIÁ</td>
+      <td>0 VND</td>
+    </tr>
+    <tr>
+      <td colspan="4" class="total">TỔNG TIỀN</td>
+      <td>${booking.totalPrice.toLocaleString('vi-VN')} VND</td>
+    </tr>
+  `
+
+  tableBody.innerHTML += rowTotalAndDiscount
+
+  paymentDateElement.textContent = `${day}/${month}/${year}`
+
+  fullNameElement.textContent = `${user.fullName}`
+  phoneNumberElement.textContent = `${user.phone}`
+  addressElement.textContent = `${user.address}`
+  emailElement.textContent = `${user.email}`
 }
