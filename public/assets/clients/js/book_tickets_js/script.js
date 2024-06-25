@@ -501,20 +501,66 @@ function updateTicketDateComplete() {
 
 updateTicketDateComplete()
 
-const btnSuccessCheckout = select('#confirm-btn-checkout')
-if (btnSuccessCheckout) {
-  btnSuccessCheckout.addEventListener('click', function () {
+getUserFromSession()
+
+// const regisForm = select('#registrationForm')
+// if (regisForm) {
+//   regisForm.addEventListener('submit', function (event) {
+//     event.preventDefault()
+
+//     console.log(data)
+//     // Gửi dữ liệu lên server bằng phương thức POST
+//     fetch('End', {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json',
+//       },
+//       body: JSON.stringify(data),
+//     })
+//       .then((response) => response.json())
+//       .then((data) => {
+//         console.log('Success:', data)
+//       })
+//       .catch((error) => {
+//         console.error('Error:', error)
+//       })
+//   })
+// }
+
+const btnRegisForm = select('#confirm-btn-checkout')
+if (btnRegisForm) {
+  btnRegisForm.addEventListener('click', function () {
     user.fullName = select('#fullName').value
     user.phone = select('#phone').value
     user.email = select('#email').value
     user.country = select('#country').value
     user.address = select('#address').value
     saveUserToSession()
-    window.location.href = 'End'
+
+    const data = {
+      booking: booking,
+      user: user,
+    }
+
+    // Tạo yêu cầu POST
+    fetch('BookTickets/addTicket', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => response.text())
+      .then((data) => {
+        console.log('Success:', data)
+      })
+      .catch((error) => {
+        console.error('Error:', error)
+      })
+
+    // window.location.href = 'End'
   })
 }
-
-getUserFromSession()
 
 const tableBody = select('.table tbody')
 const paymentDateElement = document.querySelector('.payment-date')
