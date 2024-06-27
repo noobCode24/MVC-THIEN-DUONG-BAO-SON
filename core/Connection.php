@@ -17,3 +17,94 @@ try {
     echo $e->getMessage() . '<br>';
     die();
 }   
+
+$input = file_get_contents('php://input');
+$data = json_decode($input, true);
+
+echo '<pre>';
+print_r($data);
+echo '</pre>';
+
+if (
+    isset($data['user']) &&
+    isset($data['booking']) &&
+    isset($data['booking_date']) &&
+    isset($data['date_of_use'])
+) {
+    try {
+        // Giải mã JSON và lấy dữ liệu user và booking từ POST
+        $user = $data['user'];
+        $booking = $data['booking'];
+        $booking_date = $data['booking_date'];
+        $date_of_use = $data['date_of_use'];
+
+        // Bắt đầu transaction
+        $conn->beginTransaction();
+
+        // Ví dụ: chèn dữ liệu user vào bảng customers
+        $sql = "INSERT INTO customers(full_name, email, phone_number, country, address, id_Number) 
+        VALUES(:full_name, :email, :phone_number, :country, :address, :id_Number)";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute([
+            ':full_name' => $user['full_name'],
+            ':email' => $user['email'],
+            ':phone_number' => $user['phone_number'],
+            ':country' => $user['country'],
+            ':address' => $user['address'],
+            ':id_Number' => $user['id_Number'],
+        ]);
+
+        // Lấy id của khách hàng vừa chèn
+        $customerId = $conn->lastInsertId();
+
+
+        // Chèn dữ liệu vào bảng booking
+        $sql = "INSERT INTO booking(customer_id, booking_date, date_of_use, total_price) 
+         VALUES(:customer_id, :booking_date, :date_of_use, :total_price)";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute([
+            ':customer_id' => $customerId,
+            ':booking_date' => $booking_date,
+            ':date_of_use' => $date_of_use,
+            ':total_price' => $booking['totalPrice'],
+        ]);
+
+        // Lấy id của bản ghi booking vừa chèn
+        $bookingId = $conn->lastInsertId();
+
+        if (isset($booking['tickets']) && is_array($booking['tickets'])) {
+            foreach ($booking['tickets'] as $ticket) {
+                if (!isset($ticket['title']) || !isset($ticket['quantity']) || !isset($ticket['price'])) {
+                    throw new Exception('Dữ liệu vé không hợp lệ: ' . json_encode($ticket));
+                }
+
+                $sql = "SELECT ticket_id FROM ticket WHERE ticket_name = :ticket_name";
+                $stmt = $conn->prepare($sql);
+                $stmt->execute([':ticket_name' => $ticket['title']]);
+                $ticket_id = $stmt->fetchColumn();
+
+                if ($ticket_id === false) {
+                    // Xử lý nếu ticket không tồn tại
+                    throw new Exception('ticket_name không tồn tại trong bảng ticket: ' . $ticket['title']);
+                }
+
+                // Chèn dữ liệu vào bảng booking_detail
+                $sql = "INSERT INTO booking_detail(booking_id, ticket_id, quantity, price) 
+                VALUES(:booking_id, :ticket_id, :quantity, :price)";
+                $stmt = $conn->prepare($sql);
+                $stmt->execute([
+                    ':booking_id' => $bookingId,
+                    ':ticket_id' => $ticket_id,
+                    ':quantity' => $ticket['quantity'],
+                    ':price' => $ticket['price'],
+                ]);
+            }
+        }
+
+        $conn->commit();
+    } catch (Exception $e) {
+        // Nếu có lỗi, rollback transaction
+        $conn->rollBack();
+        echo 'Lỗi: ' . $e->getMessage();
+    }
+}
