@@ -530,34 +530,34 @@ getUserFromSession()
 const btnRegisForm = select('#confirm-btn-checkout')
 if (btnRegisForm) {
   btnRegisForm.addEventListener('click', function () {
-    user.fullName = select('#fullName').value
-    user.phone = select('#phone').value
+    user.full_name = select('#fullName').value
+    user.phone_number = select('#phone').value
     user.email = select('#email').value
     user.country = select('#country').value
     user.address = select('#address').value
+    user.id_Number = select('#idNumber').value
     saveUserToSession()
 
     const data = {
       booking: booking,
       user: user,
+      booking_date: `${day}/${month}/${year}`,
+      date_of_use: `${booking.day}/${booking.month}/${booking.year}`,
     }
 
-    // Tạo yêu cầu POST
-    fetch('BookTickets/addTicket', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
+    console.log(data)
+    $.ajax({
+      url: 'core/Connection.php',
+      type: 'POST',
+      data: JSON.stringify(data),
+      contentType: 'application/json',
+      success: function (response) {
+        console.log(response)
       },
-      body: JSON.stringify(data),
+      error: function (xhr, status, error) {
+        console.error(xhr.responseText)
+      },
     })
-      .then((response) => response.text())
-      .then((data) => {
-        console.log('Success:', data)
-      })
-      .catch((error) => {
-        console.error('Error:', error)
-      })
-
     // window.location.href = 'End'
   })
 }
