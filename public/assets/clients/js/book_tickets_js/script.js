@@ -117,12 +117,12 @@ let booking = {
   totalPrice: 0,
 }
 let user = {
-  fullName: '',
-  phone: '',
+  full_name: '',
+  phone_number: '',
   email: '',
   country: '',
   address: '',
-  idNumber: '',
+  id_Number: '',
 }
 
 function saveBookingToSession() {
@@ -177,94 +177,6 @@ $('#datepicker').on('change', function () {
 })
 
 updateTicketDateCheckout()
-let timerElement = document.getElementById('timer')
-if (timerElement) {
-  let time = timerElement.textContent.split(':')
-  let minutes = parseInt(time[0])
-  let seconds = parseInt(time[1])
-  function startCountdown() {
-    let countdown = setInterval(function () {
-      if (seconds === 0) {
-        if (minutes === 0) {
-          clearInterval(countdown)
-          window.location.href = 'Front_page?timeout=true'
-        } else {
-          minutes--
-          seconds = 59
-        }
-      } else {
-        seconds--
-      }
-
-      timerElement.textContent = `${minutes}:${
-        seconds < 10 ? '0' : ''
-      }${seconds}`
-    }, 1000)
-  }
-
-  startCountdown()
-  function validateFullName() {
-    var fullName = document.getElementById('fullName')
-    var fullNameError = document.getElementById('fullNameError')
-    if (fullName.value.trim() === '') {
-      fullName.classList.add('error')
-      fullNameError.classList.add('active')
-    } else {
-      fullName.classList.remove('error')
-      fullNameError.classList.remove('active')
-    }
-  }
-
-  function validatePhone() {
-    var phone = document.getElementById('phone')
-    var phoneError = document.getElementById('phoneError')
-    var phonePattern = /^[0-9]{10}$/
-    if (!phonePattern.test(phone.value)) {
-      phone.classList.add('error')
-      phoneError.classList.add('active')
-    } else {
-      phone.classList.remove('error')
-      phoneError.classList.remove('active')
-    }
-  }
-
-  function validateEmail() {
-    var email = document.getElementById('email')
-    var emailError = document.getElementById('emailError')
-    var emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
-    if (!emailPattern.test(email.value)) {
-      email.classList.add('error')
-      emailError.classList.add('active')
-    } else {
-      email.classList.remove('error')
-      emailError.classList.remove('active')
-    }
-  }
-
-  document.querySelectorAll('input').forEach((input) => {
-    input.addEventListener('blur', () => {
-      switch (input.id) {
-        case 'fullName':
-          validateFullName()
-          break
-        case 'phone':
-          validatePhone()
-          break
-        case 'email':
-          validateEmail()
-          break
-      }
-    })
-  })
-}
-
-var btnBuyTicket = select('#buy-ticket')
-if (btnBuyTicket != null) {
-  btnBuyTicket.addEventListener('click', function () {
-    saveBookingToSession()
-    window.location.href = 'Tickets'
-  })
-}
 
 /* start ticket-list */
 var loadDate = function () {
@@ -553,14 +465,52 @@ if (btnRegisForm) {
       contentType: 'application/json',
       success: function (response) {
         console.log(response)
+        const jsonResponse = JSON.parse(response)
+        if (jsonResponse.status === 'success') {
+          console.log('AJAX request succeeded, redirecting now...')
+          window.location.href = 'End'
+        } else {
+          console.error('AJAX request failed:', jsonResponse.message)
+        }
       },
       error: function (xhr, status, error) {
         console.error(xhr.responseText)
       },
     })
-    // window.location.href = 'End'
   })
 }
+// function showPost(link) {
+//   console.log(link);
+//   user.fullName = select("#fullName").value;
+//   user.phone = select("#phone").value;
+//   user.email = select("#email").value;
+//   user.country = select("#country").value;
+//   user.address = select("#address").value;
+//   saveUserToSession();
+
+//   const data = {
+//     booking: booking,
+//     user: user,
+//   };
+
+//   // Tạo yêu cầu POST
+//   fetch("admin/BookTickets", {
+//     method: "POST",
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//     body: JSON.stringify(data),
+//   })
+//     .then((response) => response.text())
+//     .then((data) => {
+//       console.log("Success:", data);
+//     })
+//     .catch((error) => {
+//       console.error("Error:", error);
+//     });
+
+//   window.location.href = link;
+// }
 
 const tableBody = select('.table tbody')
 const paymentDateElement = document.querySelector('.payment-date')
@@ -608,8 +558,8 @@ if (
 
   paymentDateElement.textContent = `${day}/${month}/${year}`
 
-  fullNameElement.textContent = `${user.fullName}`
-  phoneNumberElement.textContent = `${user.phone}`
+  fullNameElement.textContent = `${user.full_name}`
+  phoneNumberElement.textContent = `${user.phone_number}`
   addressElement.textContent = `${user.address}`
   emailElement.textContent = `${user.email}`
 }
