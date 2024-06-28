@@ -7,14 +7,15 @@ class Model
         // echo 'model';
     }
 
-    function ExecuteSql($sql, $data = [], $check = false){
+    function ExecuteSql($sql, $data = [], $check = false)
+    {
         global $conn;
         global $resultSql;
         // echo $sql . '<br>';     
         try {
             $statement = $conn->prepare($sql);
             if (!empty($data)) {
-                $resultSql =  $statement->execute($data);
+                $resultSql = $statement->execute($data);
             } else {
                 $resultSql = $statement->execute();
             }
@@ -27,11 +28,13 @@ class Model
         // echo '<pre>';
         // print_r($statement);
         // echo '</pre>';
-        if ($check) return $statement;
+        if ($check)
+            return $statement;
         return $resultSql;
     }
 
-    function Insert($table, $data = []){
+    function Insert($table, $data = [])
+    {
         $keys = array_keys($data);
         $fields = implode(',', $keys);
         $values = ':' . implode(',:', $keys);
@@ -42,7 +45,8 @@ class Model
         return $resultSql;
     }
 
-    function Update($table, $data = [], $condition = ''){
+    function Update($table, $data = [], $condition = '')
+    {
         $update = '';
         foreach ($data as $keys => $value) {
             $update .= $keys . ' = :' . $keys . ',';
@@ -57,7 +61,8 @@ class Model
         return $resultSql;
     }
 
-    function Delete($table, $condition = ''){
+    function Delete($table, $condition = '')
+    {
         if (!empty($condition)) {
             $sql = 'DELETE FROM ' . $table . ' WHERE ' . $condition;
         } else {
@@ -67,8 +72,9 @@ class Model
         return $resultSql;
     }
 
-    function Select($sql, $num_line = 2){
-        $res = $this->ExecuteSql($sql, [], true);
+    function Select($sql, $data = [], $num_line = 2)
+    {
+        $res = $this->ExecuteSql($sql, $data, true);
         $dataFetch = '';
         if (is_object($res)) {
             if ($num_line == 1) {
@@ -80,7 +86,8 @@ class Model
         return $dataFetch;
     }
 
-    function countLine($sql){
+    function countLine($sql)
+    {
         $res = $this->ExecuteSql($sql, [], true);
         $dataFetch = '';
         if (is_object($res)) {
