@@ -85,11 +85,11 @@
                         <div class="sub-customer-info_checkout">
                             <h2>THÔNG TIN KHÁCH HÀNG</h2>
                             <div class="line_checkout"></div>
-                            <form id="registrationForm">
+                            <form id="registrationForm" action="#">
                                 <div class="form-row">
                                     <div class="form-group">
                                         <label for="fullName">Họ Tên <span style="color: red">*</span></label>
-                                        <input type="text" id="fullName" name="fullName">
+                                        <input type="text" id="fullName" name="full_name">
                                         <div class="error-message" id="fullNameError">Vui lòng nhập họ tên.</div>
                                     </div>
                                     <div class="form-group">
@@ -109,9 +109,9 @@
                                         <label for="country">Quốc Gia</label>
                                         <select id="country" name="country">
                                             <option class="option-content1" value="">Chọn quốc gia</option>
-                                            <option value="vn">Việt Nam</option>
-                                            <option value="us">Hoa Kỳ</option>
-                                            <option value="ca">Canada</option>
+                                            <option value="Việt Nam">Việt Nam</option>
+                                            <option value="Hoa Kỳ">Hoa Kỳ</option>
+                                            <option value="Canada">Canada</option>
                                             <!-- Add more countries as needed -->
                                         </select>
                                     </div>
@@ -194,7 +194,7 @@
                     </div>
                     <div class="order-actions">
                         <button class="back-button"></button>
-                        <button type="submit" class="checkout-button" id="confirm-btn-checkout">THANH TOÁN</button>
+                        <button class="checkout-button" id="confirm-btn-checkout">THANH TOÁN</button>
                     </div>
                 </div>
             </div>
