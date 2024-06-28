@@ -10,12 +10,10 @@ class Tickets extends Controller
         $navItem = [
             'Danh mục',
             'Thông tin vé',
-            // 'Thông tin khác hàng'
         ];
         $navLink = [
             'Tickets',
-            'BookTickets',
-            // 'Customer'
+            'BookTicketInfo',
         ];
         $this->data['navItem'] = $navItem;
         $this->data['navLink'] = $navLink;
@@ -48,7 +46,7 @@ class Tickets extends Controller
             $fileName = time() . $extend;
             move_uploaded_file(
                 $_FILES['ticket_icon']['tmp_name'],
-                'C:\xampp\htdocs\MVC\public\assets\admin\images\ticket_type_image\service-' . $fileName
+                'C:\xampp\htdocs\MVC-TDBS-OFFICIAL\public\assets\admin\images\ticket_type_image\service-' . $fileName
             );
             $fileName = 'service-' . $fileName;
             return $fileName;
@@ -58,9 +56,9 @@ class Tickets extends Controller
     public function postAddTypeTicket()
     {
         $fileName = $this->handelImage();
-        echo '<pre>';
-        print_r($_POST);
-        echo '</pre>';
+        // echo '<pre>';
+        // print_r($_POST);
+        // echo '</pre>';
         // die();
         if ($this->model_home->addTypeTicket($fileName)) {
             $msg = 'Thêm vé thành công';
