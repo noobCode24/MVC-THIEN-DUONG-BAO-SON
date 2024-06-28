@@ -14,19 +14,21 @@ try {
         );
     }
 } catch (Exception $e) {
-    echo $e->getMessage() . '<br>';
+    echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
     die();
-}   
+}
 
 $input = file_get_contents('php://input');
 $data = json_decode($input, true);
 
-echo '<pre>';
-print_r($data);
-echo '</pre>';
-
 if (
     isset($data['user']) &&
+    !empty($data['user']['address']) &&
+    !empty($data['user']['country']) &&
+    !empty($data['user']['email']) &&
+    !empty($data['user']['full_name']) &&
+    !empty($data['user']['id_Number']) &&
+    !empty($data['user']['phone_number']) &&
     isset($data['booking']) &&
     isset($data['booking_date']) &&
     isset($data['date_of_use'])
@@ -102,9 +104,10 @@ if (
         }
 
         $conn->commit();
+        echo json_encode(['status' => 'success', 'message' => 'Chèn dữ liệu thành công']);
     } catch (Exception $e) {
         // Nếu có lỗi, rollback transaction
         $conn->rollBack();
-        echo 'Lỗi: ' . $e->getMessage();
+        $e->getMessage();
     }
 }
